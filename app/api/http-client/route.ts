@@ -28,7 +28,16 @@ export async function POST(req: NextRequest) {
     }
 
     const started = performance.now();
-    const res = await fetch(url, { method, redirect: 'manual' });
+    const ua = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0 Safari/537.36';
+    const res = await fetch(url, {
+      method,
+      redirect: 'manual',
+      headers: {
+        'user-agent': ua,
+        'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+        'accept-language': 'en-US,en;q=0.9',
+      }
+    });
     const elapsed = performance.now() - started;
     const headers: Record<string, string> = {};
     res.headers.forEach((v, k) => headers[k] = v);

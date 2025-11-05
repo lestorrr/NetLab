@@ -14,13 +14,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <div className="container-page py-4">
             <div className="flex items-center justify-between gap-4">
               <Link href="/" className="text-lg font-semibold tracking-tight">NetLab</Link>
-              <nav className="flex items-center gap-4 text-sm">
+              <nav className="flex items-center gap-4 text-sm flex-wrap">
                 <Link className="nav-link" href="/port-scanner">Port Scanner</Link>
                 <Link className="nav-link" href="/http-client">HTTP Client</Link>
                 <Link className="nav-link" href="/ping">TCP Ping</Link>
                 <Link className="nav-link" href="/speed-test">Speed Test</Link>
                 <Link className="nav-link" href="/bandwidth-monitor">Bandwidth</Link>
                 <Link className="nav-link" href="/simple-web-server">Web Server</Link>
+                <Link className="nav-link" href="/ssl-scanner">SSL Scanner</Link>
+                <Link className="nav-link" href="/dns-tools">DNS Tools</Link>
+                <Link className="nav-link" href="/security-headers">Security Headers</Link>
               </nav>
             </div>
           </div>
