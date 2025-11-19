@@ -2,7 +2,7 @@ export default function Home() {
   return (
     <div className="space-y-8">
       <section className="text-center space-y-3">
-        <h1 className="text-3xl sm:text-4xl font-semibold tracking-tight">NetLab</h1>
+        <h1 className="text-3xl sm:text-4xl font-semibold tracking-tight">NetLab by-jhnlstrlclcn</h1>
         <p className="text-gray-600 max-w-2xl mx-auto">
           Legitimate networking tools with a clean UI and matching Python scripts. Please use responsibly—only on systems you own or have explicit permission to test.
         </p>

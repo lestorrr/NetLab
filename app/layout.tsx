@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 export const metadata = {
   title: 'NetLab - Legit Python Networking Demos',
-  description: 'Educational networking tools and Python scripts with a web UI.',
+  description: 'by-jhnlstrlclcn',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
