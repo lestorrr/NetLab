@@ -2,8 +2,7 @@ import './globals.css';
 import Link from 'next/link';
 
 export const metadata = {
-  title: 'NetLab - Legit Python Networking Demos',
-  description: 'by-jhnlstrlclcn',
+  title: 'NetLab By Jhnlstrlclcn',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
