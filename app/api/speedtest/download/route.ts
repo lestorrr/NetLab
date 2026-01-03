@@ -1,8 +1,11 @@
 import { NextRequest } from 'next/server';
+import { checkRateLimit } from '../../_lib/safeguards';
 
 export const dynamic = 'force-dynamic';
 
 export async function GET(req: NextRequest) {
+  const rl = checkRateLimit(req, 2, 30);
+  if (rl) return rl;
   const { searchParams } = new URL(req.url);
   const sizeMb = Math.min(16, Math.max(1, Number(searchParams.get('mb') || 5)));
   const size = sizeMb * 1024 * 1024;

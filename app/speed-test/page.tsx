@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from 'react';
+import ToolLayout from '../components/ToolLayout'
 
 export default function SpeedTestPage() {
   const [downMbps, setDownMbps] = useState<number | null>(null);
@@ -12,7 +13,7 @@ export default function SpeedTestPage() {
     const res = await fetch(url, { cache: 'no-store' });
     const reader = res.body!.getReader();
     let bytes = 0;
-    while(true){
+    while (true) {
       const { value, done } = await reader.read();
       if (done) break;
       bytes += value?.length || 0;
@@ -46,14 +47,10 @@ export default function SpeedTestPage() {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="space-y-2">
-        <h2 className="text-2xl font-semibold tracking-tight">Speed Test</h2>
-        <p className="text-sm text-gray-600">Measures browser ↔ server throughput. Results depend on your network/ISP and serverless region.</p>
-      </div>
+    <ToolLayout title="Speed Test" description="Measures browser ↔ server throughput. Results depend on your network/ISP and serverless region.">
       <div className="flex gap-3">
-        <button className="btn" onClick={run} disabled={running}>{running?'Running…':'Run 5 MB Down/Up'}</button>
-        <button className="btn-secondary" onClick={()=>{setDownMbps(null); setUpMbps(null);}} disabled={running}>Reset</button>
+        <button className="btn" onClick={run} disabled={running}>{running ? 'Running…' : 'Run 5 MB Down/Up'}</button>
+        <button className="btn-secondary" onClick={() => { setDownMbps(null); setUpMbps(null); }} disabled={running}>Reset</button>
       </div>
       <div className="card max-w-md">
         <div className="grid grid-cols-2 gap-4 text-center">
@@ -67,6 +64,6 @@ export default function SpeedTestPage() {
           </div>
         </div>
       </div>
-    </div>
+    </ToolLayout>
   );
 }

@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server';
 import net from 'net';
 import dns from 'dns/promises';
+import { checkRateLimit, checkAllowDeny } from '../_lib/safeguards';
 
 function privateIp(ip: string) {
   const privateBlocks = [/^10\./, /^192\.168\./, /^172\.(1[6-9]|2\d|3[0-1])\./, /^127\./, /^::1$/, /^fc00:/, /^fe80:/];
@@ -21,6 +22,8 @@ function tcpOnce(host: string, port: number, timeoutMs = 1000): Promise<number |
 
 export async function POST(req: NextRequest) {
   try {
+    const rl = checkRateLimit(req, 12, 60);
+    if (rl) return rl;
     const body = await req.json();
     const host = String(body.host || '').trim();
     const port = Number(body.port || 80);
@@ -31,7 +34,8 @@ export async function POST(req: NextRequest) {
     const addrs = await dns.lookup(host, { all: true });
     const ip = addrs[0]?.address;
     if (!ip) return Response.json({ error: 'Unable to resolve host' }, { status: 400 });
-    if (privateIp(ip)) return Response.json({ error: 'Private/loopback addresses are not allowed' }, { status: 400 });
+    const deny = checkAllowDeny(req, ip) || checkAllowDeny(req, host);
+    if (deny) return deny;
 
     const rtts: number[] = [];
     for (let i = 0; i < attempts; i++) {
@@ -41,10 +45,10 @@ export async function POST(req: NextRequest) {
 
     const summary = rtts.length
       ? {
-          min: Math.min(...rtts),
-          max: Math.max(...rtts),
-          avg: rtts.reduce((a, b) => a + b, 0) / rtts.length,
-        }
+        min: Math.min(...rtts),
+        max: Math.max(...rtts),
+        avg: rtts.reduce((a, b) => a + b, 0) / rtts.length,
+      }
       : null;
 
     return Response.json({ host, ip, port, attempts, received: rtts.length, rtts, summary });

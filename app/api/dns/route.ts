@@ -1,5 +1,6 @@
 import { NextRequest } from 'next/server';
 import dns from 'dns/promises';
+import { checkRateLimit, checkAllowDeny } from '../_lib/safeguards';
 
 async function safeResolve<T>(fn: () => Promise<T>): Promise<T | null> {
   try { return await fn(); } catch { return null; }
@@ -7,9 +8,13 @@ async function safeResolve<T>(fn: () => Promise<T>): Promise<T | null> {
 
 export async function POST(req: NextRequest) {
   try {
+    const rl = checkRateLimit(req, 12, 60);
+    if (rl) return rl;
     const body = await req.json();
     const host = String(body.host || '').trim();
     if (!host) return Response.json({ error: 'Host required' }, { status: 400 });
+    const deny = checkAllowDeny(req, host);
+    if (deny) return deny;
 
     const [A, AAAA, MX, NS, TXT] = await Promise.all([
       safeResolve(async () => (await dns.resolve4(host)).slice(0, 20)),

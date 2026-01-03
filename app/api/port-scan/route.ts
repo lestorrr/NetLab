@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server';
 import net from 'net';
 import dns from 'dns/promises';
+import { checkRateLimit, checkAllowDeny } from '../_lib/safeguards';
 
 function parsePorts(input: string): number[] {
   const parts = input.split(',').map(p => p.trim()).filter(Boolean);
@@ -41,21 +42,20 @@ function connectOnce(host: string, port: number, timeoutMs = 500): Promise<numbe
 
 export async function POST(req: NextRequest) {
   try {
+    const rl = checkRateLimit(req, 6, 60);
+    if (rl) return rl;
     const body = await req.json();
     const host = String(body.host || '').trim();
     const portsInput = String(body.ports || '').trim();
     if (!host) return Response.json({ error: 'Host is required' }, { status: 400 });
     if (!portsInput) return Response.json({ error: 'Ports are required' }, { status: 400 });
 
-    // Resolve host and block private IPs to avoid SSRF into internal networks
+    // Resolve host and block private IPs / denylist to avoid SSRF into internal networks
     const addrs = await dns.lookup(host, { all: true });
     const ip = addrs[0]?.address;
     if (!ip) return Response.json({ error: 'Unable to resolve host' }, { status: 400 });
-
-    const privateBlocks = [/^10\./, /^192\.168\./, /^172\.(1[6-9]|2\d|3[0-1])\./, /^127\./, /^::1$/, /^fc00:/, /^fe80:/];
-    if (privateBlocks.some((re) => re.test(ip))) {
-      return Response.json({ error: 'Private/loopback addresses are not allowed' }, { status: 400 });
-    }
+    const deny = checkAllowDeny(req, ip) || checkAllowDeny(req, host);
+    if (deny) return deny;
 
     const ports = parsePorts(portsInput);
     if (ports.length === 0) return Response.json({ error: 'No valid ports (max 100)' }, { status: 400 });

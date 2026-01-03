@@ -1,5 +1,8 @@
 "use client";
 import { useState } from 'react';
+import ToolLayout from '../components/ToolLayout'
+import ResultCard from '../components/ResultCard'
+import OutputBox from '../components/OutputBox'
 
 export default function PortScannerPage() {
   const [host, setHost] = useState('example.com');
@@ -29,20 +32,16 @@ export default function PortScannerPage() {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="space-y-2">
-        <h2 className="text-2xl font-semibold tracking-tight">Port Scanner</h2>
-        <p className="text-sm text-gray-600">Educational use only. Max 100 ports per request. Only scan authorized hosts.</p>
-      </div>
+    <ToolLayout title="Port Scanner" description="Educational use only. Max 100 ports per request. Only scan authorized hosts.">
       <div className="card max-w-2xl">
         <div className="grid gap-4">
           <div>
             <label className="label">Host or IP</label>
-            <input className="input" value={host} onChange={e=>setHost(e.target.value)} placeholder="example.com" />
+            <input className="input" value={host} onChange={e => setHost(e.target.value)} placeholder="example.com" />
           </div>
           <div>
             <label className="label">Ports (comma-separated or ranges like 80-90)</label>
-            <input className="input" value={ports} onChange={e=>setPorts(e.target.value)} />
+            <input className="input" value={ports} onChange={e => setPorts(e.target.value)} />
           </div>
           <div>
             <button className="btn" onClick={onScan} disabled={loading}>{loading ? 'Scanning…' : 'Scan'}</button>
@@ -52,18 +51,20 @@ export default function PortScannerPage() {
       </div>
 
       {results && (
-        <div className="card max-w-2xl">
-          <h3 className="text-lg font-medium">Results for {results.host}</h3>
-          <p className="text-sm text-gray-600">Open ports: {results.openPorts.length}</p>
-          <ul className="list-disc pl-5 text-sm">
-            {results.openPorts.map((p: any) => (
-              <li key={p.port}>Port {p.port} open (time {p.ms.toFixed(1)} ms)</li>
-            ))}
-          </ul>
-          {results.closedCount > 0 && <p className="text-sm text-gray-600 mt-2">Closed/filtered: {results.closedCount}</p>}
-          <p className="text-sm text-gray-600 mt-2">Took {results.tookMs.toFixed(1)} ms</p>
-        </div>
+        <ResultCard title={`Results for ${results.host}`} subtitle={`Open ports: ${results.openPorts.length}`} stats={[{ label: 'Open', value: results.openPorts.length }, { label: 'Closed/Filtered', value: results.closedCount }, { label: 'Took (ms)', value: results.tookMs.toFixed(1) }]}>
+          <div className="space-y-2">
+            <ul className="list-none space-y-1">
+              {results.openPorts.map((p: any) => (
+                <div key={p.port} className="flex items-center justify-between p-2 rounded-md bg-white">
+                  <div className="font-medium">Port {p.port}</div>
+                  <div className="text-sm text-gray-600">{p.ms.toFixed(1)} ms</div>
+                </div>
+              ))}
+            </ul>
+            <OutputBox value={JSON.stringify(results, null, 2)} />
+          </div>
+        </ResultCard>
       )}
-    </div>
-  );
+    </ToolLayout>
+  )
 }

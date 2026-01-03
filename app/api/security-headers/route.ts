@@ -1,4 +1,5 @@
 import { NextRequest } from 'next/server';
+import { checkRateLimit, checkAllowDeny } from '../_lib/safeguards';
 
 const BLOCKED_HOSTS = ['localhost', '127.0.0.1', '::1'];
 function isPrivateHost(hostname: string) {
@@ -6,8 +7,7 @@ function isPrivateHost(hostname: string) {
   return /^10\./.test(hostname) || /^192\.168\./.test(hostname) || /^172\.(1[6-9]|2\d|3[0-1])\./.test(hostname);
 }
 
-async function fetchWithRedirects(url: URL, maxHops = 3): Promise<{ url: URL; response: Response; chain: string[] }>
-{
+async function fetchWithRedirects(url: URL, maxHops = 3): Promise<{ url: URL; response: Response; chain: string[] }> {
   const ua = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0 Safari/537.36';
   const chain: string[] = [];
   let current = url;
@@ -23,7 +23,7 @@ async function fetchWithRedirects(url: URL, maxHops = 3): Promise<{ url: URL; re
       },
     });
     // Not a redirect
-    if (![301,302,303,307,308].includes(res.status)) {
+    if (![301, 302, 303, 307, 308].includes(res.status)) {
       return { url: current, response: res, chain };
     }
     if (i === maxHops) return { url: current, response: res, chain };
@@ -38,6 +38,8 @@ async function fetchWithRedirects(url: URL, maxHops = 3): Promise<{ url: URL; re
 
 export async function POST(req: NextRequest) {
   try {
+    const rl = checkRateLimit(req, 6, 60);
+    if (rl) return rl;
     const body = await req.json();
     const urlStr = String(body.url || '').trim();
     if (!urlStr) return Response.json({ error: 'URL required' }, { status: 400 });
@@ -46,6 +48,8 @@ export async function POST(req: NextRequest) {
     if (!['http:', 'https:'].includes(url.protocol)) {
       return Response.json({ error: 'Only http/https supported' }, { status: 400 });
     }
+    const deny = checkAllowDeny(req, url.hostname);
+    if (deny) return deny;
     if (isPrivateHost(url.hostname)) {
       return Response.json({ error: 'Private/loopback hosts are blocked' }, { status: 400 });
     }

@@ -1,6 +1,8 @@
+import ToolLayout from './components/ToolLayout'
+
 export default function Home() {
   return (
-    <div className="space-y-8">
+    <ToolLayout title="NetLab by Jhnlstrlclcn">
       <section className="text-center space-y-3">
         <h1 className="text-3xl sm:text-4xl font-semibold tracking-tight">NetLab by Jhnlstrlclcn</h1>
         <p className="text-gray-600 max-w-2xl mx-auto">
@@ -37,6 +39,6 @@ export default function Home() {
           <p className="text-sm text-gray-600">Serve a folder locally for quick experiments with standard library.</p>
         </div>
       </div>
-    </div>
+    </ToolLayout>
   );
 }

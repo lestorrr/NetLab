@@ -23,6 +23,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <Link className="nav-link" href="/ssl-scanner">SSL Scanner</Link>
                 <Link className="nav-link" href="/dns-tools">DNS Tools</Link>
                 <Link className="nav-link" href="/security-headers">Security Headers</Link>
+                <Link className="nav-link" href="/whois">WHOIS</Link>
+                <Link className="nav-link" href="/reverse-dns">Reverse DNS</Link>
+                <Link className="nav-link" href="/geoip">GeoIP</Link>
               </nav>
             </div>
           </div>

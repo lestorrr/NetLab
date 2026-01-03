@@ -1,6 +1,15 @@
 export const dynamic = 'force-dynamic';
 
+import { NextRequest } from 'next/server';
+import { checkRateLimit } from '../_lib/safeguards';
+
 export async function POST(req: Request) {
+  // Note: Next.js may pass a NextRequest in app routes; allow either.
+  try {
+    const maybe = req as unknown as NextRequest;
+    const rl = checkRateLimit(maybe, 2, 30);
+    if (rl) return rl;
+  } catch { }
   try {
     const started = performance.now();
     let bytes = 0;

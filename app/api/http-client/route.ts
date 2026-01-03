@@ -1,5 +1,6 @@
 import { NextRequest } from 'next/server';
 import { URL } from 'node:url';
+import { checkRateLimit, checkAllowDeny } from '../_lib/safeguards';
 
 const BLOCKED_HOSTS = [
   'localhost', '127.0.0.1', '::1'
@@ -13,6 +14,8 @@ function isPrivate(hostname: string) {
 
 export async function POST(req: NextRequest) {
   try {
+    const rl = checkRateLimit(req, 8, 60);
+    if (rl) return rl;
     const body = await req.json();
     const urlStr = String(body.url || '').trim();
     const method = String(body.method || 'GET').toUpperCase();
@@ -23,9 +26,8 @@ export async function POST(req: NextRequest) {
     if (!['http:', 'https:'].includes(url.protocol)) {
       return Response.json({ error: 'Only http/https supported' }, { status: 400 });
     }
-    if (isPrivate(url.hostname)) {
-      return Response.json({ error: 'Private/loopback hosts are blocked' }, { status: 400 });
-    }
+    const deny = checkAllowDeny(req, url.hostname);
+    if (deny) return deny;
 
     const started = performance.now();
     const ua = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0 Safari/537.36';
