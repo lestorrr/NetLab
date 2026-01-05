@@ -1,7 +1,7 @@
 export const dynamic = 'force-dynamic';
 
 import { NextRequest } from 'next/server';
-import { checkRateLimit } from '../_lib/safeguards';
+import { checkRateLimit } from '../../_lib/safeguards';
 
 export async function POST(req: Request) {
   // Note: Next.js may pass a NextRequest in app routes; allow either.
