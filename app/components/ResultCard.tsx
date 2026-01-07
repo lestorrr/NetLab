@@ -12,14 +12,14 @@ type Props = {
 export default function ResultCard({ title, subtitle, stats, children }: Props) {
     return (
         <div className="card max-w-3xl">
-            {title && <h3 className="text-lg font-medium">{title}</h3>}
-            {subtitle && <p className="text-sm text-gray-600">{subtitle}</p>}
+            {title && <h3 className="text-lg font-semibold text-white">{title}</h3>}
+            {subtitle && <p className="text-sm text-white/80">{subtitle}</p>}
             {stats && (
                 <div className="grid sm:grid-cols-3 gap-3 mt-3">
                     {stats.map((s) => (
-                        <div key={String(s.label)} className="p-3 rounded-md bg-gray-50">
-                            <div className="text-xs text-gray-500">{s.label}</div>
-                            <div className="font-medium mt-1">{s.value}</div>
+                        <div key={String(s.label)} className="p-3 rounded-md bg-white/4">
+                            <div className="text-xs text-white/70">{s.label}</div>
+                            <div className="font-medium mt-1 text-white">{s.value}</div>
                         </div>
                     ))}
                 </div>
