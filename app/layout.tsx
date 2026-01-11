@@ -10,9 +10,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body className="min-h-screen">
         <Header />
-        <main className="container-page mt-8">{children}</main>
-        <footer className="mt-16">
-          <div className="container-page text-sm text-white/70">
+        <main className="container-page pt-8 pb-14">{children}</main>
+        <footer className="border-t border-white/10">
+          <div className="container-page py-10 text-sm text-white/70">
             For educational, authorized use only. Only scan or test hosts you own or have permission to test.
           </div>
         </footer>

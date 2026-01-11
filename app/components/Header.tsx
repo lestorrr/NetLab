@@ -42,12 +42,12 @@ export default function Header() {
     }, [open])
 
     return (
-        <header className="sticky top-0 z-40 bg-black/55 backdrop-blur-sm border-b border-white/6">
-            <div className="container-page py-3">
+        <header className="sticky top-0 z-40 border-b border-white/10 bg-black/70 backdrop-blur-md">
+            <div className="container-page py-4">
                 <div className="flex items-center justify-between">
-                    <Link href="/" className="text-2xl font-extrabold tracking-tight text-white">NetLab</Link>
+                    <Link href="/" className="text-xl font-extrabold tracking-[0.02em] text-white">NetLab</Link>
 
-                    <nav className="hidden md:flex items-center gap-4 text-sm overflow-x-auto no-scrollbar">
+                    <nav className="hidden md:flex items-center gap-6 text-sm overflow-x-auto no-scrollbar">
                         {links.map((l) => (
                             <Link key={l[1]} href={String(l[1])} className="nav-link">{String(l[0])}</Link>
                         ))}

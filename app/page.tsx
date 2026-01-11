@@ -4,8 +4,8 @@ import Link from 'next/link'
 export default function Home() {
   return (
     <>
-      <main className="container-page mt-12">
-        <section className="grid md:grid-cols-2 items-center gap-8">
+      <div className="space-y-14">
+        <section className="grid items-center gap-8 md:grid-cols-2">
           <div className="space-y-6">
             <h1 className="text-3xl sm:text-4xl md:text-6xl font-extrabold tracking-tight text-white leading-tight">Please use<br />RESPONSIBLY</h1>
             <p className="text-white/80">NetLab is for educational, authorized use only. Only scan or test hosts you own or have permission to test.</p>
@@ -57,7 +57,7 @@ export default function Home() {
             </div>
           </div>
         </ToolLayout>
-      </main>
+      </div>
     </>
   )
 }

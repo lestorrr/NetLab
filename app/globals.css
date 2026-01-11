@@ -136,7 +136,7 @@
 
 @layer components {
 	.container-page {
-		@apply max-w-5xl mx-auto px-4 py-8;
+		@apply max-w-6xl mx-auto px-4;
 	}
 
 	.card {
@@ -160,7 +160,7 @@
 	}
 
 	.nav-link {
-		@apply text-sm text-white/90 hover:text-white tracking-wide uppercase whitespace-nowrap;
+		@apply text-[13px] font-medium text-white/80 hover:text-white tracking-wide uppercase whitespace-nowrap;
 	}
 
 	/* hide scrollbar for overflowed nav on small screens */
