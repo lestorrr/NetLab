@@ -251,8 +251,10 @@
 	}
 
 	.mobile-menu-panel {
-		@apply fixed top-0 right-0 h-full w-72 bg-white shadow-2xl z-50 p-6;
+		@apply fixed top-0 right-0 h-full w-72 max-w-[85vw] bg-white shadow-2xl z-50 p-5;
 		animation: slideInRight 0.3s ease-out;
+		overflow-y: auto;
+		-webkit-overflow-scrolling: touch;
 	}
 
 	@keyframes slideInRight {
