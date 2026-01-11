@@ -35,7 +35,7 @@ async function grabBanner({ host, port, hint, timeoutMs = 1500, maxBytes = 4096 
             done = true
             socket.destroy()
             const elapsedMs = performance.now() - start
-            const buf = Buffer.concat(chunks)
+            const buf = Buffer.concat(chunks as unknown as Uint8Array[])
             const banner = buf.toString('utf8')
             resolve({ banner, bytes: buf.length, elapsedMs })
         }

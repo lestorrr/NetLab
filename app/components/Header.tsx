@@ -61,9 +61,9 @@ export default function Header() {
     }, [open])
 
     return (
-        <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-lg border-b border-gray-200">
+        <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-lg border-b border-gray-200" style={{ paddingTop: 'env(safe-area-inset-top)' }}>
             <div className="container-page">
-                <div className="flex items-center justify-between h-16">
+                <div className="flex items-center justify-between h-14 md:h-16">
                     {/* Logo */}
                     <Link href="/" className="flex items-center gap-2 group flex-shrink-0">
                         <div className="w-8 h-8 bg-gray-900 rounded-lg flex items-center justify-center group-hover:scale-105 transition-transform">
@@ -72,8 +72,8 @@ export default function Header() {
                         <span className="text-xl font-bold text-gray-900">NetLab</span>
                     </Link>
 
-                    {/* Desktop Nav */}
-                    <nav className="hidden lg:flex items-center gap-1">
+                    {/* Desktop Nav - hidden on portrait tablets */}
+                    <nav className="hidden xl:flex items-center gap-1">
                         {mainLinks.map((link) => (
                             <Link
                                 key={link.href}
@@ -114,7 +114,7 @@ export default function Header() {
 
                     {/* Mobile Menu Button */}
                     <button
-                        className="lg:hidden p-2 rounded-xl hover:bg-gray-100 transition-colors flex-shrink-0"
+                        className="xl:hidden p-2 rounded-xl hover:bg-gray-100 transition-colors flex-shrink-0"
                         onClick={() => setOpen(!open)}
                         aria-label="Toggle menu"
                         aria-expanded={open}
@@ -134,9 +134,9 @@ export default function Header() {
             {/* Mobile Menu */}
             {open && (
                 <>
-                    <div className="mobile-menu-overlay lg:hidden" onClick={() => setOpen(false)} />
-                    <div ref={menuRef} className="mobile-menu-panel lg:hidden overflow-y-auto">
-                        <div className="flex items-center justify-between mb-6 sticky top-0 bg-white pb-4 border-b border-gray-100">
+                    <div className="mobile-menu-overlay xl:hidden" onClick={() => setOpen(false)} />
+                    <div ref={menuRef} className="mobile-menu-panel xl:hidden">
+                        <div className="flex items-center justify-between mb-6 sticky top-0 bg-white pb-4 border-b border-gray-100 z-10">
                             <span className="text-lg font-bold text-gray-900">Menu</span>
                             <button
                                 onClick={() => setOpen(false)}
